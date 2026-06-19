@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract Android project
         run: |
-          ZIP_FILE=$(ls kids_alphabet_fa_android*.zip | head -n 1)
+          ZIP_FILE="kids_alphabet_fa_android_studio_v2_professional_sound.zip"
           echo "ZIP file found: $ZIP_FILE"
           unzip -q "$ZIP_FILE"
           ls -la
