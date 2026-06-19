@@ -23,13 +23,25 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Show repo files
-        run: ls -la
+        run: |
+          echo "Files in repository:"
+          ls -la
 
       - name: Extract Android project
         run: |
-          ZIP_FILE="kids_alphabet_fa_android_studio_v2_professional_sound.zip"
+          ZIP_FILE=$(find . -maxdepth 1 -name "kids_alphabet_fa_android_studio*.zip" -print | sort -V | tail -n 1)
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "No Android project ZIP file found."
+            exit 1
+          fi
+
           echo "ZIP file found: $ZIP_FILE"
+
+          rm -rf kids_alphabet_fa
           unzip -q "$ZIP_FILE"
+
+          echo "Files after unzip:"
           ls -la
           ls -la kids_alphabet_fa
 
@@ -39,5 +51,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: kids-alphabet-fa-debug-apk
+          name: kids-alphabet-fa-v5-debug-apk
           path: kids_alphabet_fa/app/build/outputs/apk/debug/*.apk
