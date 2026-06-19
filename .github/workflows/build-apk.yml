@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: kids_alphabet_fa
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -26,11 +22,22 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Show repo files
+        run: ls -la
+
+      - name: Extract Android project
+        run: |
+          ZIP_FILE=$(ls kids_alphabet_fa_android*.zip | head -n 1)
+          echo "ZIP file found: $ZIP_FILE"
+          unzip -q "$ZIP_FILE"
+          ls -la
+          ls -la kids_alphabet_fa
+
       - name: Build Debug APK
-        run: gradle assembleDebug
+        run: gradle -p kids_alphabet_fa assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: kids-alphabet-debug-apk
+          name: kids-alphabet-fa-debug-apk
           path: kids_alphabet_fa/app/build/outputs/apk/debug/*.apk
